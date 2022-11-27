@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState, useEffect } from "react";
+import "./App.css";
+import store from "./redux/store";
 function App() {
+  const [state, setState] = useState(() => store.getState());
+
+  useEffect(() => {
+    store.subscribe(() => {
+      const state = store.getState();
+      setState(state);
+    });
+  }, []);
+
+  const handleUpdateName = () => {
+    const action = { type: "update_name", name: "Huy dep trai" };
+    store.dispatch(action);
+  };
+
+  const handleUpdateAge = () => {
+    const action = { type: "update_age", age: 31 };
+    store.dispatch(action);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h2>{state.nameState.name}</h2>
+      <h3>{state.ageState.age}</h3>
+      <button onClick={handleUpdateName}>Update Name</button>
+      <button onClick={handleUpdateAge}>Update Age</button>
     </div>
   );
 }
